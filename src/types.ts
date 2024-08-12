@@ -9,3 +9,14 @@ export interface BTCData {
     M: boolean; // Ignore
     T: number; // Trade time
 }
+
+export enum Guess {
+    Up = 'up',
+    Down = 'down'
+}
+
+export interface GuessResult {
+    guessPrice: number;
+    resolvedPrice: number;
+    guess: Guess;
+}

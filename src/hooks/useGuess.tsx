@@ -1,26 +1,21 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Guess, GuessResult } from '../types.ts';
 
 export interface GuessState {
     score: number;
-    currentGuess: 'up' | 'down' | null;
+    currentGuess: Guess | null;
     currentGuessPrice: number | null;
     isWaitingForPriceChange: boolean;
 }
 
-export interface Result {
-    guessPrice: number;
-    resolvedPrice: number;
-    guess: 'up' | 'down';
-}
-
 export interface UseGuessReturn extends Omit<GuessState, 'isWaitingForPriceChange'> {
-    handleGuess: (newGuess: 'up' | 'down') => void;
-    didWin: (result: Result) => boolean;
+    handleGuess: (newGuess: Guess) => void;
+    didWin: (result: GuessResult) => boolean;
 }
 
 export interface UseGuessProps {
     btcPrice: number | null;
-    onResult?: (result: Result) => void;
+    onResult?: (result: GuessResult) => void;
     initialScore?: number;
 }
 
@@ -34,7 +29,7 @@ export const useGuess = ({initialScore, btcPrice, onResult}: UseGuessProps): Use
 
     const timeoutRef = useRef<number | null>(null);
 
-    const handleGuess = (newGuess: 'up' | 'down') => {
+    const handleGuess = (newGuess: Guess) => {
         setState(prevState => ({
             ...prevState,
             currentGuess: newGuess,
@@ -97,9 +92,9 @@ export const useGuess = ({initialScore, btcPrice, onResult}: UseGuessProps): Use
         };
     }, []);
 
-    const didWin = (result: Result) =>
-        (result.guess === 'up' && result.resolvedPrice > result.guessPrice) ||
-        (result.guess === 'down' && result.resolvedPrice < result.guessPrice);
+    const didWin = (result: GuessResult) =>
+        (result.guess === Guess.Up && result.resolvedPrice > result.guessPrice) ||
+        (result.guess === Guess.Down && result.resolvedPrice < result.guessPrice);
 
     const {score, currentGuess, currentGuessPrice} = state;
 

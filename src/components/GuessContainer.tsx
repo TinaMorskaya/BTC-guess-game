@@ -1,17 +1,18 @@
 import { Score } from './Score.tsx';
-import { Result, useGuess } from '../hooks/useGuess.tsx';
+import { useGuess } from '../hooks/useGuess.tsx';
 import { useRef, useState } from 'react';
 import { GuessButtons } from './GuessButtons.tsx';
 import { GuessStatus } from './GuessStatus.tsx';
 import { useGameContext } from '../hooks/useGameContext.tsx';
+import { GuessResult } from '../types.ts';
 
 export const GuessContainer = () => {
-    const [ result, setResult ] = useState<Result | null>(null);
+    const [ result, setResult ] = useState<GuessResult | null>(null);
     const [ win, setWin ] = useState<boolean | null>(null);
     const resultTimeoutRef = useRef<number | null>(null);
     const {btcPrice} = useGameContext();
 
-    const onResult = (result: Result) => {
+    const onResult = (result: GuessResult) => {
         if (resultTimeoutRef.current) {
             window.clearTimeout(resultTimeoutRef.current);
         }
