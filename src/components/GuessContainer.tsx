@@ -1,45 +1,42 @@
 import { Score } from './Score.tsx';
-import { useGuess } from '../hooks/useGuess.tsx';
-import { useEffect, useRef, useState } from 'react';
+import { Result, useGuess } from '../hooks/useGuess.tsx';
+import { useRef, useState } from 'react';
 import { GuessButtons } from './GuessButtons.tsx';
 import { GuessStatus } from './GuessStatus.tsx';
 import { useGameContext } from '../hooks/useGameContext.tsx';
-import { saveScore } from '../api/saveScore.ts';
 
 export const GuessContainer = () => {
-    const [ showResult, setShowResult ] = useState(false);
+    const [ result, setResult ] = useState<Result | null>(null);
+    const [ win, setWin ] = useState<boolean | null>(null);
     const resultTimeoutRef = useRef<number | null>(null);
     const {btcPrice} = useGameContext();
-    const {
-        score,
-        guessPrice,
-        guess,
-        lastResult,
-        handleGuess,
-        didWin,
-    } = useGuess({btcPrice});
 
-    useEffect(() => {
+    const onResult = (result: Result) => {
         if (resultTimeoutRef.current) {
             window.clearTimeout(resultTimeoutRef.current);
         }
 
-        if (lastResult) {
-            setShowResult(true);
-            resultTimeoutRef.current = window.setTimeout(() => {
-                setShowResult(false);
-            }, 5000);
-            setShowResult(true);
-            saveScore({score: lastResult.guessPrice});
-        }
-    }, [ lastResult ]);
+        setWin(didWin(result));
+        setResult(result);
+        resultTimeoutRef.current = window.setTimeout(() => {
+            setWin(null);
+            setResult(null);
+        }, 5000);
+    };
 
-    const win = lastResult && didWin(lastResult);
+    const {
+        score,
+        currentGuessPrice,
+        currentGuess,
+        handleGuess,
+        didWin,
+    } = useGuess({btcPrice, onResult});
+
 
     return (
         <>
-            <GuessButtons disabled={Boolean(guess || showResult)} onGuess={handleGuess}/>
-            <GuessStatus guessPrice={guessPrice} showResult={showResult} lastResult={lastResult} win={win}/>
+            <GuessButtons disabled={Boolean(currentGuess || result)} onGuess={handleGuess}/>
+            <GuessStatus guessPrice={currentGuessPrice} result={result} win={win}/>
             <Score score={score}/>
         </>
     );
