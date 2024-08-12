@@ -1,20 +1,13 @@
 import './App.css'
-import { useBTCCostUSD } from './hooks/useBTCCostUSD.tsx';
-import { GuessContainer } from './components/GuessContainer.tsx';
+import { GameProvider } from './context/GameContext.tsx';
+import { GameContainer } from './components/GameContainer.tsx';
 
 function App() {
-    const {price, date} = useBTCCostUSD();
-
-    if (!price || !date) {
-        return <p>Loading...</p>;
-    }
-
     return (
-        <>
-            <p>Current price: {price}</p>
-            <GuessContainer btcPrice={price} btcPriceDate={date}/>
-        </>
-    )
+        <GameProvider>
+            <GameContainer/>
+        </GameProvider>
+    );
 }
 
 export default App

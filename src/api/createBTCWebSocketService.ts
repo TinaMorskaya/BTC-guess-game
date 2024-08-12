@@ -6,8 +6,8 @@ export interface BTCWebSocketService {
 }
 
 export interface CreateBTCWebSocketServiceProps {
-    statusListener: (status: string) => void;
     dataListener: (data: BTCData) => void;
+    statusListener: (status: string) => void;
 }
 
 export const createBTCWebSocketService = ({
@@ -20,12 +20,12 @@ export const createBTCWebSocketService = ({
     const connect = () => {
         ws = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@trade');
 
-        ws.onopen = () => statusListener('WebSocket connected');
+        ws.onopen = () => statusListener && statusListener('WebSocket connected');
 
         ws.onmessage = (event) => {
             const data: BTCData = JSON.parse(event.data);
             dataListener(data);
-            statusListener('')
+            statusListener('Successfully received data');
         };
 
         ws.onclose = () => {
@@ -34,7 +34,8 @@ export const createBTCWebSocketService = ({
         };
 
         ws.onerror = (error: Event) => {
-            statusListener(error instanceof ErrorEvent ? 'WebSocket error:' + error.message : 'An unknown error occurred');
+            const errorMessage = error instanceof ErrorEvent ? 'WebSocket error:' + error.message : 'An unknown error occurred';
+            statusListener(errorMessage);
             console.error('WebSocket error:', error);
         };
     };
