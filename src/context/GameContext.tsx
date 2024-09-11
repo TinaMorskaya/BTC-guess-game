@@ -23,6 +23,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({children}
         }
     }, [ playerId ]);
 
+
     return (
         <GameContext.Provider value={{btcPrice, btcPriceDate, playerId, setPlayerId}}>
             {children}

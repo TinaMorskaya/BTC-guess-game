@@ -2,15 +2,14 @@ import { Guess } from '../types.ts';
 
 export interface GuessButtonsProps {
     onGuess: (guess: Guess) => void;
-    disabled: boolean;
 }
 
-export const GuessButtons = ({onGuess, disabled}: GuessButtonsProps) =>
+export const GuessButtons = ({onGuess}: GuessButtonsProps) =>
     <div className='buttons-container'>
-        <button onClick={() => onGuess(Guess.Up)} disabled={disabled}>
+        <button onClick={() => onGuess(Guess.Up)}>
             Up
         </button>
-        <button onClick={() => onGuess(Guess.Down)} disabled={disabled}>
+        <button onClick={() => onGuess(Guess.Down)}>
             Down
         </button>
     </div>
