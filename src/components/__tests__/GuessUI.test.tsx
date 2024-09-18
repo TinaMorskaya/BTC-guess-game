@@ -9,7 +9,6 @@ describe('GuessUI', () => {
             <GuessUI
                 currentGuessPrice={null}
                 result={null}
-                win={null}
                 score={0}
                 handleGuess={vi.fn()}
                 {...props}
@@ -37,7 +36,15 @@ describe('GuessUI', () => {
     });
 
     it('should render GuessResultMessage when result and no currentGuessPrice', () => {
-        renderComponent({result: {guess: Guess.Up, resolvedPrice: 10000, guessPrice: 9000}, win: false, score: 1});
+        renderComponent({
+            result: {
+                guess: Guess.Up,
+                resolvedPrice: 10000,
+                guessPrice: 9000,
+                isWinner: false,
+            },
+            score: 1
+        });
 
         const result = screen.getByRole('alert');
         expect(within(result).getByText(
@@ -48,5 +55,4 @@ describe('GuessUI', () => {
         expect(screen.getByText('Score: 1')).toBeVisible();
         expect(screen.queryByText('Waiting for result... Your guess:')).toBeNull();
     });
-
 });

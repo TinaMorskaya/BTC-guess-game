@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Guess, GuessResult } from '../types.ts';
 
 export interface GuessState {
-    score: number;
     currentGuess: Guess | null;
     currentGuessPrice: number | null;
     isWaitingForPriceChange: boolean;
@@ -10,18 +9,15 @@ export interface GuessState {
 
 export interface UseGuessReturn extends Omit<GuessState, 'isWaitingForPriceChange'> {
     handleGuess: (newGuess: Guess) => void;
-    didWin: (result: GuessResult) => boolean;
 }
 
 export interface UseGuessProps {
-    btcPrice: number | null;
-    onResult?: (result: GuessResult) => void;
-    initialScore?: number;
+    btcPrice: number;
+    onResult: (result: GuessResult) => void;
 }
 
-export const useGuess = ({initialScore, btcPrice, onResult}: UseGuessProps): UseGuessReturn => {
+export const useGuess = ({btcPrice, onResult}: UseGuessProps): UseGuessReturn => {
     const [ state, setState ] = useState<GuessState>({
-        score: initialScore ?? 0,
         currentGuess: null,
         currentGuessPrice: null,
         isWaitingForPriceChange: false,
@@ -51,30 +47,24 @@ export const useGuess = ({initialScore, btcPrice, onResult}: UseGuessProps): Use
     };
 
     const resolveGuess = useCallback(() => {
-        if (state.currentGuess && state.currentGuessPrice !== null && btcPrice && state.currentGuessPrice !== btcPrice) {
+        if (state.currentGuess && state.currentGuessPrice !== null && state.currentGuessPrice !== btcPrice) {
             const guessPrice = state.currentGuessPrice;
             const guess = state.currentGuess;
-            let isCorrect = false;
-            if (state.currentGuess === 'up' && btcPrice > state.currentGuessPrice) {
-                isCorrect = true;
-            } else if (state.currentGuess === 'down' && btcPrice < state.currentGuessPrice) {
-                isCorrect = true;
-            }
 
             const newResult = {
                 guessPrice,
                 resolvedPrice: btcPrice,
                 guess,
+                isWinner: didWin({guessPrice, resolvedPrice: btcPrice, guess}),
             }
 
             setState(prevState => ({
                 ...prevState,
-                score: isCorrect ? prevState.score + 1 : prevState.score ? prevState.score - 1 : 0,
                 currentGuess: null,
                 currentGuessPrice: null,
                 isWaitingForPriceChange: false,
             }));
-            onResult?.(newResult);
+            onResult(newResult);
         }
     }, [ btcPrice, state.currentGuess, state.currentGuessPrice, onResult ]);
 
@@ -92,11 +82,10 @@ export const useGuess = ({initialScore, btcPrice, onResult}: UseGuessProps): Use
         };
     }, []);
 
-    const didWin = (result: GuessResult) =>
-        (result.guess === Guess.Up && result.resolvedPrice > result.guessPrice) ||
-        (result.guess === Guess.Down && result.resolvedPrice < result.guessPrice);
+    const didWin = ({guess, guessPrice, resolvedPrice}: Omit<GuessResult, 'isWinner'>) =>
+        (guess === Guess.Up && resolvedPrice > guessPrice) ||
+        (guess === Guess.Down && resolvedPrice < guessPrice);
 
-    const {score, currentGuess, currentGuessPrice} = state;
-
-    return {score, currentGuess, currentGuessPrice, handleGuess, didWin};
+    const {currentGuess, currentGuessPrice} = state;
+    return {currentGuess, currentGuessPrice, handleGuess};
 };

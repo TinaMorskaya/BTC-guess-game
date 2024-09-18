@@ -1,23 +1,14 @@
-import { afterEach, describe, expect, Mock, vi } from 'vitest';
-
+import { afterEach, describe, expect, vi } from 'vitest';
 import React from 'react';
 import { act, render, screen } from '@testing-library/react';
 import { GameProvider, GameContext } from '../GameContext';
-import { useBTCCostUSD } from '../../hooks/useBTCCostUSD.tsx';
-
-vi.mock('../../hooks/useBTCCostUSD');
 
 describe('GameProvider', () => {
-    const mockUseBTCCostUSD = useBTCCostUSD as Mock;
     const getItemSpy = vi.spyOn(Storage.prototype, 'getItem');
     const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
 
     beforeEach(() => {
-        mockUseBTCCostUSD.mockReturnValue({
-            price: 5,
-            date: new Date('2023-01-01T00:00:00Z')
-        });
-        getItemSpy.mockReturnValue(JSON.stringify('test-player-id-1'));
+        vi.setSystemTime(new Date('2023-01-01'));
     });
 
     afterEach(() => {
@@ -25,7 +16,7 @@ describe('GameProvider', () => {
         localStorage.clear();
     });
 
-    it('provides the correct context values', () => {
+    it('provides the correct default values', () => {
         const TestComponent = () => {
             const context = React.useContext(GameContext);
             if (!context) {
@@ -33,9 +24,8 @@ describe('GameProvider', () => {
             }
             return (
                 <div>
-                    <span data-testid="btcPrice">{context.btcPrice}</span>
-                    <span data-testid="btcPriceDate">{context.btcPriceDate?.toISOString()}</span>
-                    <span data-testid="playerId">{context.playerId}</span>
+                    <span data-testid='score'>{context.score}</span>
+                    <span data-testid='playerId'>{context.playerId}</span>
                 </div>
             );
         };
@@ -46,12 +36,13 @@ describe('GameProvider', () => {
             </GameProvider>
         );
 
-        expect(screen.getByTestId('btcPrice').textContent).toBe('5');
-        expect(screen.getByTestId('btcPriceDate').textContent).toBe('2023-01-01T00:00:00.000Z');
-        expect(screen.getByTestId('playerId').textContent).toBe('test-player-id-1');
+        expect(setItemSpy).toHaveBeenCalledTimes(0);
+        expect(screen.getByTestId('score').textContent).toBe('0');
+        expect(typeof screen.getByTestId('playerId').textContent).toBe('string');
     });
 
-    it('sets and gets playerId from localStorage', () => {
+    it('sets and gets playerData from localStorage', () => {
+        getItemSpy.mockReturnValue(JSON.stringify({playerId: 'test-player-id', score: 0}));
         const TestComponent = () => {
             const context = React.useContext(GameContext);
             if (!context) {
@@ -60,8 +51,9 @@ describe('GameProvider', () => {
             return (
                 <>
                     <p data-testid='playerId'>{context.playerId}</p>
-                    <button onClick={() => context.setPlayerId('test-player-id-2')}>
-                        Set Player ID
+                    <p data-testid='score'>{context.score}</p>
+                    <button onClick={() => context.increaseScore()}>
+                        Increase Score By 1
                     </button>
                 </>
             );
@@ -73,13 +65,14 @@ describe('GameProvider', () => {
             </GameProvider>
         );
 
-        expect(screen.getByTestId('playerId')).toHaveTextContent('test-player-id-1');
+        expect(typeof screen.getByTestId('playerId').textContent).toBe('string');
+        expect(screen.getByTestId('score').textContent).toBe('0');
 
         act(() => {
-            screen.getByText('Set Player ID').click();
+            screen.getByText('Increase Score By 1').click();
         });
 
-        expect(screen.getByTestId('playerId')).toHaveTextContent('test-player-id-2')
-        expect(setItemSpy).toHaveBeenCalledWith('playerId', JSON.stringify('test-player-id-2'));
+        expect(screen.getByTestId('playerId')).toHaveTextContent('test-player-id')
+        expect(setItemSpy).toHaveBeenCalledWith('playerData', JSON.stringify({playerId: 'test-player-id', score: 1}));
     });
 });

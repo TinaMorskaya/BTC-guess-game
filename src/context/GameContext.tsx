@@ -1,31 +1,36 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { useBTCCostUSD } from '../hooks/useBTCCostUSD.tsx';
+import React, { createContext, useState } from 'react';
+import { Player } from '../types.ts';
 
 export interface GameContextType {
-    btcPrice: number | null;
-    btcPriceDate: Date | null;
     playerId: string | null;
-    setPlayerId: (id: string | null) => void;
+    score: number;
+    increaseScore: () => void;
 }
 
 export const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
-    const {price: btcPrice, date: btcPriceDate} = useBTCCostUSD();
-    const [ playerId, setPlayerId ] = useState<string | null>(() => {
-        const playerIdItem = localStorage.getItem('playerId');
-        return playerIdItem ? JSON.parse(playerIdItem) : null;
+    const [ playerData, setPlayerData ] = useState<Player>(() => {
+        const storedData = localStorage.getItem('playerData');
+        return storedData ? JSON.parse(storedData) : {
+            playerId: crypto.randomUUID(),
+            score: 0,
+        };
     });
 
-    useEffect(() => {
-        if (playerId) {
-            localStorage.setItem('playerId', JSON.stringify(playerId));
-        }
-    }, [ playerId ]);
+    const increaseScore = () => {
+        const updatedData = {...playerData, score: ++playerData.score};
+        setPlayerData(updatedData);
+        localStorage.setItem('playerData', JSON.stringify(updatedData));
+    }
 
 
     return (
-        <GameContext.Provider value={{btcPrice, btcPriceDate, playerId, setPlayerId}}>
+        <GameContext.Provider value={{
+            playerId: playerData.playerId,
+            score: playerData.score,
+            increaseScore,
+        }}>
             {children}
         </GameContext.Provider>
     );

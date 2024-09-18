@@ -9,6 +9,7 @@ export const useBTCCostUSD = () => {
 
     const dataListener = (data: BTCData) => {
         const price = parseFloat(data.p);
+        if (isNaN(price)) return;
         setPrice(price);
         setDate(new Date(data.T));
     }

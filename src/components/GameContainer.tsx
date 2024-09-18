@@ -1,17 +1,17 @@
 import { GuessContainer } from './GuessContainer.tsx';
-import { useGameContext } from '../hooks/useGameContext.tsx';
+import { useBTCCostUSD } from '../hooks/useBTCCostUSD.tsx';
 
 export const GameContainer = () => {
-    const {btcPrice} = useGameContext();
+    const {price} = useBTCCostUSD();
 
-    if (!btcPrice) {
+    if (!price) {
         return <p>Loading...</p>;
     }
 
     return (
         <>
-            <p>Current price: {btcPrice}</p>
-            <GuessContainer/>
+            <p>Current price: {price}</p>
+            <GuessContainer btcPrice={price}/>
         </>
     )
 }

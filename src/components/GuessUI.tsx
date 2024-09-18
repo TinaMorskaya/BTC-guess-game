@@ -6,7 +6,6 @@ import { GuessResultMessage } from './GuessResultMessage.tsx';
 export interface GuessUIProps {
     currentGuessPrice: number | null;
     result: GuessResult | null;
-    win: boolean | null;
     score: number;
     handleGuess: (guess: Guess) => void;
 }
@@ -15,7 +14,6 @@ export const GuessUI = (
     {
         currentGuessPrice,
         result,
-        win,
         score,
         handleGuess,
     }: GuessUIProps) =>
@@ -29,7 +27,7 @@ export const GuessUI = (
             </section>
         }
         {result && !currentGuessPrice &&
-            <GuessResultMessage result={result} win={win}/>
+            <GuessResultMessage result={result}/>
         }
         <Score score={score}/>
     </>

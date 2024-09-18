@@ -19,4 +19,10 @@ export interface GuessResult {
     guessPrice: number;
     resolvedPrice: number;
     guess: Guess;
+    isWinner: boolean;
+}
+
+export interface Player {
+    playerId: string;
+    score: number;
 }
