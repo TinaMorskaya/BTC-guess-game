@@ -10,17 +10,29 @@ export interface CreateBTCWebSocketServiceProps {
     statusListener: (status: string) => void;
 }
 
-export const createBTCWebSocketService = ({
-                                              statusListener,
-                                              dataListener,
-                                          }: CreateBTCWebSocketServiceProps): BTCWebSocketService => {
+export const createBTCWebSocketService = (
+    {
+        statusListener,
+        dataListener
+    }: CreateBTCWebSocketServiceProps): BTCWebSocketService => {
 
     let ws: WebSocket | null = null;
+    let reconnectAttempts = 0;
+    let reconnectTimeout: number | null = null;
+    const MAX_RECONNECT_ATTEMPTS = 5;
 
     const connect = () => {
-        ws = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@trade');
+        if (ws && (ws.readyState === WebSocket.CONNECTING || ws.readyState === WebSocket.OPEN)) {
+            return;
+        }
 
-        ws.onopen = () => statusListener && statusListener('WebSocket connected');
+        const url = import.meta.env.VITE_BITCOIN_COST_WS_URL;
+        ws = new WebSocket(url);
+
+        ws.onopen = () => {
+            statusListener('WebSocket connected');
+            reconnectAttempts = 0;
+        }
 
         ws.onmessage = (event) => {
             const data: BTCData = JSON.parse(event.data);
@@ -30,7 +42,7 @@ export const createBTCWebSocketService = ({
 
         ws.onclose = () => {
             statusListener('WebSocket disconnected. Reconnecting...');
-            setTimeout(connect, 5000);
+            reconnect();
         };
 
         ws.onerror = (error: Event) => {
@@ -40,10 +52,43 @@ export const createBTCWebSocketService = ({
         };
     };
 
+    const reconnect = () => {
+        if (reconnectTimeout !== null) {
+            clearTimeout(reconnectTimeout);
+        }
+
+        if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+            statusListener('Max reconnection attempts reached. Please refresh the page to try again.');
+            return;
+        }
+
+        const baseDelay = 100;
+        const scaleFactor = 1.5;
+        const maxDelay = 10000;
+
+        const delay = Math.min(baseDelay * (scaleFactor ** reconnectAttempts), maxDelay);
+        reconnectAttempts++;
+
+        statusListener(`Connection lost. Reconnecting in ${(delay / 1000).toFixed(1)} seconds...`);
+
+        reconnectTimeout = setTimeout(() => {
+            statusListener(`Reconnection attempt ${reconnectAttempts}...`);
+            connect();
+        }, delay);
+    };
+
     const disconnect = () => {
+        if (reconnectTimeout !== null) {
+            clearTimeout(reconnectTimeout);
+            reconnectTimeout = null;
+        }
+
         if (ws) {
             ws.close();
+            ws = null;
         }
+
+        reconnectAttempts = 0;
     };
 
     return {connect, disconnect};
