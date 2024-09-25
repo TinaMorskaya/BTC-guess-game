@@ -10,6 +10,8 @@ export interface CreateBTCWebSocketServiceProps {
     statusListener: (status: string) => void;
 }
 
+const MAX_RECONNECT_ATTEMPTS = 1000;
+
 export const createBTCWebSocketService = (
     {
         statusListener,
@@ -19,10 +21,9 @@ export const createBTCWebSocketService = (
     let ws: WebSocket | null = null;
     let reconnectAttempts = 0;
     let reconnectTimeout: number | null = null;
-    const MAX_RECONNECT_ATTEMPTS = 5;
 
     const connect = () => {
-        if (ws && (ws.readyState === WebSocket.CONNECTING || ws.readyState === WebSocket.OPEN)) {
+        if (ws && (ws.readyState !== WebSocket.CLOSED)) {
             return;
         }
 
@@ -53,12 +54,15 @@ export const createBTCWebSocketService = (
     };
 
     const reconnect = () => {
+        reconnectAttempts++;
+
         if (reconnectTimeout !== null) {
             clearTimeout(reconnectTimeout);
         }
 
-        if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
-            statusListener('Max reconnection attempts reached. Please refresh the page to try again.');
+        if (reconnectAttempts > MAX_RECONNECT_ATTEMPTS) {
+            statusListener('Max reconnection attempts reached. Please refresh the page.');
+            disconnect();
             return;
         }
 
@@ -66,9 +70,7 @@ export const createBTCWebSocketService = (
         const scaleFactor = 1.5;
         const maxDelay = 10000;
 
-        const delay = Math.min(baseDelay * (scaleFactor ** reconnectAttempts), maxDelay);
-        reconnectAttempts++;
-
+        const delay = Math.round(Math.min(baseDelay * (scaleFactor ** (reconnectAttempts - 1)), maxDelay));
         statusListener(`Connection lost. Reconnecting in ${(delay / 1000).toFixed(1)} seconds...`);
 
         reconnectTimeout = setTimeout(() => {
@@ -83,7 +85,7 @@ export const createBTCWebSocketService = (
             reconnectTimeout = null;
         }
 
-        if (ws) {
+        if (ws && ws.readyState !== WebSocket.CLOSED) {
             ws.close();
             ws = null;
         }
