@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, Mock } from 'vitest';
+import { afterEach, beforeEach, describe, expect, Mock, vi } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import { useBTCCostUSD } from '../useBTCCostUSD.tsx';
 import { BTCData } from '../../types.ts';
@@ -14,6 +14,10 @@ describe('useBTCCostUSD', () => {
     const mockDisconnect = vi.fn();
     const renderCustomHook = () => renderHook(() => useBTCCostUSD());
 
+    beforeAll(() => {
+        vi.useFakeTimers();
+    });
+
     beforeEach(() => {
         mockCreateBTCWebSocketService.mockImplementation(({dataListener, statusListener}) => {
             mockDataListener = dataListener;
@@ -27,6 +31,11 @@ describe('useBTCCostUSD', () => {
 
     afterEach(() => {
         vi.resetAllMocks();
+        vi.clearAllTimers();
+    });
+
+    afterAll(() => {
+        vi.useRealTimers();
     });
 
     it('should return default price, date and status', () => {
@@ -38,7 +47,8 @@ describe('useBTCCostUSD', () => {
         expect(status).toBe('');
     })
 
-    it('should update price, date and status when dataListener and statusListener are called', () => {
+    it('should update price and date when dataListener is called, ' +
+        'update status when statusListener are called during the wait time of 3 sec', () => {
         const {result} = renderCustomHook();
 
         const data: BTCData = {p: '5', T: Date.parse('2023-01-01T00:00:00Z'), ...vi.fn()()};
@@ -50,7 +60,23 @@ describe('useBTCCostUSD', () => {
         const {price, date, status} = result.current;
         expect(price).toBe(5);
         expect(date).toEqual(new Date('2023-01-01T00:00:00Z'));
-        expect(status).toBe('connected');
+        expect(status).toBe('');
+
+        vi.advanceTimersByTime(1500);
+        const {status: notUpdatedStatus} = result.current;
+        expect(notUpdatedStatus).toBe('');
+
+        act(() => {
+            mockDataListener(data);
+            mockStatusListener('connected');
+        });
+
+        act(() => {
+            vi.advanceTimersByTime(1500);
+        });
+
+        const {status: updatedStatus} = result.current;
+        expect(updatedStatus).toBe('connected');
     });
 
     it('should call connect and disconnect when mounted and unmounted', () => {

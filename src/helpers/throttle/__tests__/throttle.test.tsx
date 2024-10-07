@@ -1,5 +1,5 @@
 import { describe, expect, vi } from 'vitest';
-import { throttle } from '../throtlle.ts';
+import { throttle } from '../throttle.ts';
 
 describe('throttle', () => {
     const callback = vi.fn();

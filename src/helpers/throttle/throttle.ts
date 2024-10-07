@@ -6,24 +6,22 @@
 // debouncedFunction.flush();
 // debouncedFunction.cancel();
 
+export type ThrottleCallback<T extends unknown[]> = (...args: T) => void;
 
-export type ThrottleCallback<T> = (...args: T[]) => void;
-
-type ThrottleOptions =
+export type ThrottleOptions =
     | { leading: false, trailing?: true }
     | { trailing: false, leading?: true }
+    | { leading: true, trailing: true };
 
-export interface ThrottleArgs<T> {
+export interface ThrottleFunction<T extends unknown[]> extends ThrottleCallback<T> {
+    cancel: () => void;
+    flush: () => void;
+}
+
+export interface ThrottleArgs<T extends unknown[]> {
     callback: ThrottleCallback<T>;
     wait: number;
     options?: ThrottleOptions;
-}
-
-export interface ThrottleFunction<T extends unknown[]> {
-    cancel: () => void
-    flush: () => void
-
-    (...args: Parameters<ThrottleCallback<T>>): void
 }
 
 export const throttle = <T extends unknown[]>(
@@ -37,7 +35,7 @@ export const throttle = <T extends unknown[]>(
 
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
     let callCount = 0;
-    let callbackArgs: T[] | null = null;
+    let lastArgs: T | null = null;
 
     const reset = () => {
         if (timeoutId) {
@@ -45,23 +43,21 @@ export const throttle = <T extends unknown[]>(
         }
         callCount = 0;
         timeoutId = null;
-        callbackArgs = null;
+        lastArgs = null;
     }
 
-
-    const throttleFunction = (...args: Parameters<ThrottleCallback<T>>): void => {
-        callbackArgs = args;
+    const throttleFunction = (...args: T): void => {
+        lastArgs = args;
         callCount++;
 
         if (leading && callCount === 1) {
-            callback(...callbackArgs);
+            callback(...lastArgs);
         }
-
 
         if (!timeoutId) {
             timeoutId = setTimeout(() => {
-                if (trailing && callCount > 1 && callbackArgs) {
-                    callback(...callbackArgs);
+                if (trailing && callCount > 1 && lastArgs) {
+                    callback(...lastArgs);
                 }
                 reset();
             }, wait);
@@ -71,8 +67,8 @@ export const throttle = <T extends unknown[]>(
     throttleFunction.cancel = reset;
 
     throttleFunction.flush = () => {
-        if (callbackArgs) {
-            callback(...callbackArgs);
+        if (lastArgs) {
+            callback(...lastArgs);
             reset();
         }
     }
