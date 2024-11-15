@@ -1,12 +1,12 @@
 import { describe, expect } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
-import { GuessUI, GuessUIProps } from '../GuessUI.tsx';
-import { Guess } from '../../types.ts';
+import { GuessButtonsContainer, GuessUIProps } from '../GuessButtonsContainer.tsx';
+import { Guess } from '../../../types.ts';
 
 describe('GuessUI', () => {
     const renderComponent = (props?: Partial<GuessUIProps>) =>
         render(
-            <GuessUI
+            <GuessButtonsContainer
                 currentGuessPrice={null}
                 result={null}
                 score={0}

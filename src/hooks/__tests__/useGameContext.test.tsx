@@ -1,12 +1,12 @@
-import { GameProvider } from '../../context/GameContext';
-import { useGameContext } from '../useGameContext';
+import { PlayerProvider } from '../../context/GameProvider.tsx';
+import { usePlayerContext } from '../usePlayerContext.tsx';
 import { renderHook } from '@testing-library/react';
 import { ReactNode } from 'react';
 
 describe('useGameContext', () => {
     it('returns context when used within GameProvider', () => {
-        const wrapper = ({children}: { children: ReactNode }) => <GameProvider>{children}</GameProvider>;
-        const {result} = renderHook(() => useGameContext(), {wrapper});
+        const wrapper = ({children}: { children: ReactNode }) => <PlayerProvider>{children}</PlayerProvider>;
+        const {result} = renderHook(() => usePlayerContext(), {wrapper});
 
         expect(result.current).toBeDefined();
         expect(result.current.score).toBe(0);
@@ -17,7 +17,7 @@ describe('useGameContext', () => {
     it('throws error when used outside of GameProvider', () => {
         renderHook(() => {
             try {
-                useGameContext()
+                usePlayerContext()
             } catch (error) {
                 expect(error).toEqual(Error('useGameContext must be used within a GameProvider'))
             }

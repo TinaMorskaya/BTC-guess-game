@@ -1,15 +1,15 @@
 import { afterEach, describe, expect, Mock, vi } from 'vitest';
 import { GameContainer } from '../GameContainer.tsx';
 import { render, screen } from '@testing-library/react';
-import { useBTCCostUSD } from '../../hooks/useBTCCostUSD.tsx';
-import { useGameContext } from '../../hooks/useGameContext.tsx';
+import { useBTCCostUSD } from '../../../hooks/useBTCCostUSD.tsx';
+import { usePlayerContext } from '../../../hooks/usePlayerContext.tsx';
 
 vi.mock('../../hooks/useBTCCostUSD');
 vi.mock('../../hooks/useGameContext');
 
 describe('GameContainer', () => {
     const mockUseBTCCostUSD = useBTCCostUSD as Mock;
-    const mockUseGameContext = useGameContext as Mock;
+    const mockUseGameContext = usePlayerContext as Mock;
 
     beforeEach(() => {
         mockUseGameContext.mockReturnValue({score: 0, increaseScore: vi.fn()});

@@ -1,6 +1,6 @@
 import { describe, expect } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
-import { Guess } from '../../types.ts';
+import { Guess } from '../../../types.ts';
 import { GuessResultMessage, GuessResultMessageProps } from '../GuessResultMessage.tsx';
 
 describe('GuessResultMessage', () => {

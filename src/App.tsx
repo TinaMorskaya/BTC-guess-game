@@ -1,12 +1,15 @@
 import './App.css'
-import { GameProvider } from './context/GameContext.tsx';
-import { GameContainer } from './components/GameContainer.tsx';
+import { PlayerProvider } from './context/GameProvider.tsx';
+import { GameContainer } from './components/game/GameContainer.tsx';
+import { BTCPriceProvider } from './context/BTCPriceProvider.tsx';
 
 function App() {
     return (
-        <GameProvider>
-            <GameContainer/>
-        </GameProvider>
+        <BTCPriceProvider>
+            <PlayerProvider>
+                <GameContainer/>
+            </PlayerProvider>
+        </BTCPriceProvider>
     );
 }
 

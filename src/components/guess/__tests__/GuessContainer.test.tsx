@@ -1,20 +1,20 @@
 import { describe, it, expect, vi, Mock, afterEach } from 'vitest';
 import { render, screen, act, within } from '@testing-library/react';
-import { GuessContainer, GuessContainerProps } from '../GuessContainer';
-import { useGuess } from '../../hooks/useGuess';
-import { Guess, GuessResult } from '../../types';
-import { useGameContext } from '../../hooks/useGameContext.tsx';
+import { PredictionContainer, GuessContainerProps } from '../PredictionContainer.tsx';
+import { useGuess } from '../../../hooks/useGuess.tsx';
+import { Guess, GuessResult } from '../../../types.ts';
+import { usePlayerContext } from '../../../hooks/usePlayerContext.tsx';
 
 vi.mock('../../hooks/useGuess');
 vi.mock('../../hooks/useGameContext');
 
 describe('GuessContainer', () => {
     const mockUseGuess = useGuess as Mock;
-    const mockUseGameContext = useGameContext as Mock;
+    const mockUseGameContext = usePlayerContext as Mock;
 
     const renderComponent = (props?: Partial<GuessContainerProps>) => {
         return render(
-            <GuessContainer btcPrice={5} {...props}/>
+            <PredictionContainer btcPrice={5} {...props}/>
         );
     }
 
@@ -78,7 +78,7 @@ describe('GuessContainer', () => {
     it('should clear previous result timeout when new result is set', () => {
         const clearTimeoutSpy = vi.spyOn(window, 'clearTimeout');
         renderComponent();
-        
+
         const resultTimeoutId = 123;
         mockUseGuess.mock.calls[0][0].resultTimeoutRef.current = resultTimeoutId;
 
