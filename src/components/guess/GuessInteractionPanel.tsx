@@ -8,7 +8,7 @@ export interface GuessUIProps {
     showResult: boolean;
 }
 
-export const GuessButtonsContainer = (
+export const GuessInteractionPanel = (
     {
         currentGuessPrice,
         isWinner,

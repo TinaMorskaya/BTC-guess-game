@@ -1,8 +1,8 @@
 import { PredictionContainer } from '../guess/PredictionContainer.tsx';
 import { CurrentPrice } from './CurrentPrice.tsx';
-import { Score } from '../guess/Score.tsx';
+import { Score } from './Score.tsx';
 
-export const GameContent = () => (
+export const Game = () => (
     <>
         <section aria-label='Game description' className='game-description box'>
             <h1>BitPredict: 60-Second Bitcoin Price Challenge</h1>

@@ -30,8 +30,8 @@ export const LastGuess = (
             <h3 className='last-guess-label'>
                 Actual price
                 <span className='last-guess-value'>
-                        {result?.resolvedPrice}
-                    </span>
+                    {!currentGuess && !currentGuessPrice && result?.resolvedPrice}
+                </span>
             </h3>
         </div>
     </section>

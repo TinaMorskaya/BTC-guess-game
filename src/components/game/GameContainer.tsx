@@ -1,6 +1,6 @@
 import { GameLoading } from './GameLoading.tsx';
-import { GameContent } from './GameContent.tsx';
 import { useBTCPriceContext } from '../../hooks/useBTCPriceContext.tsx';
+import { Game } from './Game.tsx';
 
 export const GameContainer = () => {
     const {btcPrice, btcWebSocketStatus} = useBTCPriceContext();
@@ -9,7 +9,9 @@ export const GameContainer = () => {
         <>
             {!btcPrice
                 ? <GameLoading status={btcWebSocketStatus}/>
-                : <GameContent/>
+                : <>
+                    <Game/>
+                </>
             }
         </>
     )

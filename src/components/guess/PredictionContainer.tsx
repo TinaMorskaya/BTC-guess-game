@@ -1,13 +1,14 @@
 import { useGuess } from '../../hooks/useGuess.tsx';
 import { useRef, useState } from 'react';
 import { GuessResult } from '../../types.ts';
-import { GuessButtonsContainer } from './GuessButtonsContainer.tsx';
+import { GuessInteractionPanel } from './GuessInteractionPanel.tsx';
 import { usePlayerContext } from '../../hooks/usePlayerContext.tsx';
 import { useBTCPriceContext } from '../../hooks/useBTCPriceContext.tsx';
 import { LastGuess } from './LastGuess.tsx';
 
+export const TIMEOUT_SHOW_RESULT = 5000;
+
 export const PredictionContainer = () => {
-    //MOVE to context
     const [ result, setResult ] = useState<GuessResult | null>(null);
     const [ showResult, setShowResult ] = useState(false);
     const resultTimeoutRef = useRef<number | null>(null);
@@ -30,7 +31,7 @@ export const PredictionContainer = () => {
 
         resultTimeoutRef.current = window.setTimeout(() => {
             setShowResult(false);
-        }, 5000);
+        }, TIMEOUT_SHOW_RESULT);
     };
 
     const {
@@ -41,9 +42,9 @@ export const PredictionContainer = () => {
 
     return (
         <>
-            <GuessButtonsContainer
+            <GuessInteractionPanel
                 currentGuessPrice={currentGuessPrice}
-                isWinner={result?.isWinner ?? false}
+                isWinner={Boolean(result?.isWinner)}
                 handleGuess={handleGuess}
                 showResult={showResult}
             />

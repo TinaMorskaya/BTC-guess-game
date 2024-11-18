@@ -1,5 +1,5 @@
 import { describe } from 'vitest';
-import { Score, ScoreProps } from '../Score.tsx';
+import { Score, ScoreProps } from '../../game/Score.tsx';
 import { render } from '@testing-library/react';
 
 describe('Score', () => {

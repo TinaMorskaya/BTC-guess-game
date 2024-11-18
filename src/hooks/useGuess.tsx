@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Guess, GuessResult } from '../types.ts';
 
+// TODO: Change timer to 60000
+export const TIMEOUT_WAITING_FOR_PRICE_CHANGE = 1000;
+
 export interface GuessState {
     currentGuess: Guess | null;
     currentGuessPrice: number | null;
@@ -42,8 +45,7 @@ export const useGuess = ({btcPrice, onResult}: UseGuessProps): UseGuessReturn =>
                 ...prevState,
                 isWaitingForPriceChange: true,
             }));
-            // TODO: Change timer to 60000
-        }, 1000);
+        }, TIMEOUT_WAITING_FOR_PRICE_CHANGE);
     };
 
     const resolveGuess = useCallback(() => {
