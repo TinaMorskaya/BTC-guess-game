@@ -1,23 +1,22 @@
 import { afterEach, describe, expect, Mock, vi } from 'vitest';
 import { GameContainer } from '../GameContainer.tsx';
 import { render, screen } from '@testing-library/react';
-import { useBTCCostUSD } from '../../../hooks/useBTCCostUSD.tsx';
+import { useBTCPriceContext } from '../../../hooks/useBTCPriceContext.tsx';
 import { usePlayerContext } from '../../../hooks/usePlayerContext.tsx';
 
-vi.mock('../../hooks/useBTCCostUSD');
-vi.mock('../../hooks/useGameContext');
+vi.mock('../../../hooks/useBTCPriceContext');
+vi.mock('../../../hooks/usePlayerContext');
 
 describe('GameContainer', () => {
-    const mockUseBTCCostUSD = useBTCCostUSD as Mock;
-    const mockUseGameContext = usePlayerContext as Mock;
+    const mockUseBTCPriceContext = useBTCPriceContext as Mock;
+    const mockUsePlayerContext = usePlayerContext as Mock;
 
     beforeEach(() => {
-        mockUseGameContext.mockReturnValue({score: 0, increaseScore: vi.fn()});
+        mockUsePlayerContext.mockReturnValue({score: 1});
     });
 
     afterEach(() => {
-        mockUseBTCCostUSD.mockReset();
-        mockUseGameContext.mockReset();
+        vi.resetAllMocks();
     });
 
     const renderComponent = () =>
@@ -26,18 +25,21 @@ describe('GameContainer', () => {
         );
 
     it('should render loading when btcPrice is null', () => {
-        mockUseBTCCostUSD.mockReturnValue({price: null});
+        mockUseBTCPriceContext.mockReturnValue({btcPrice: null, btcWebSocketStatus: 'loading'});
         renderComponent();
 
-        expect(mockUseBTCCostUSD).toHaveBeenCalled();
-        expect(screen.getByText('Loading...')).toBeVisible();
+        expect(mockUseBTCPriceContext).toHaveBeenCalled();
+        expect(screen.getByText('Loading bitcoin price...')).toBeVisible();
+        expect(screen.getByText('Status: loading')).toBeVisible();
     });
 
     it('should render GameContainer', () => {
-        mockUseBTCCostUSD.mockReturnValue({price: 5});
+        mockUseBTCPriceContext.mockReturnValue({btcPrice: 5, btcWebSocketStatus: 'ready'});
         renderComponent();
 
-        expect(mockUseBTCCostUSD).toHaveBeenCalled();
-        expect(screen.getByText('Current price: 5')).toBeVisible();
+        expect(mockUseBTCPriceContext).toHaveBeenCalled();
+        expect(screen.getByLabelText('Game description')).toBeVisible();
+        expect(screen.getByLabelText('Game')).toBeVisible();
+        expect(screen.queryByText('ready')).not.toBeInTheDocument();
     });
 });

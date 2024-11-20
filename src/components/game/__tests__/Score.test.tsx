@@ -9,7 +9,7 @@ describe('Score', () => {
     const mockUsePlayerContext = usePlayerContext as Mock;
 
     beforeEach(() => {
-        mockUsePlayerContext.mockReturnValue({score: 1, increaseScore: vi.fn()});
+        mockUsePlayerContext.mockReturnValue({score: 1});
     });
 
     afterEach(() => {
