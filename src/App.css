@@ -157,8 +157,13 @@ main {
 .last-guess {
     grid-row: 2/3;
     grid-column: span 2;
-    gap: 1em;
     color: var(--text-color);
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: center;
 
     @media (max-width: 625px) {
         grid-row: 3;
@@ -166,25 +171,16 @@ main {
     }
 }
 
-.last-guess__content {
-    display: flex;
-    flex-direction: row;
-    gap: 1em;
-    align-items: flex-start;
-    justify-content: center;
-    text-align: center;
-}
-
 .last-guess__label {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     gap: 1rem;
-
 }
 
 .last-guess__value {
     color: var(--gradient-end-dark);
     font-size: 1rem;
     font-weight: bold;
+    margin: 0;
 }
