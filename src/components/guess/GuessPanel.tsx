@@ -8,7 +8,7 @@ export interface GuessUIProps {
     showResult: boolean;
 }
 
-export const GuessInteractionPanel = (
+export const GuessPanel = (
     {
         currentGuessPrice,
         isWinner,
@@ -16,18 +16,18 @@ export const GuessInteractionPanel = (
         showResult,
     }: GuessUIProps) => {
     return (
-        <section className='guess-ui flex-column box'>
+        <section className='guess-panel flex-column box'>
             {!currentGuessPrice && !showResult &&
                 <GuessButtons onGuess={handleGuess}/>
             }
             {currentGuessPrice &&
-                <section className='guess-message'>
+                <section className='guess-panel__message' role='alert'>
                     Waiting for result...
                 </section>
             }
             {showResult &&
-                <section role='alert'
-                         className={`guess-message ${isWinner ? 'correct-answer' : 'wrong-answer'}`}>
+                <section role='alert' className={`guess-panel__message 
+                    guess-panel__message--${isWinner ? 'correct-answer' : 'wrong-answer'}`}>
                     You {isWinner ? 'won' : 'lost'}!
                 </section>
             }

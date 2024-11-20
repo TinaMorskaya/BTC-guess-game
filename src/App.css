@@ -1,33 +1,4 @@
-main {
-    min-height: 100vh;
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
-    padding: 1em;
-    display: grid;
-    grid-template-rows: 2fr 3fr;
-    gap: 1em;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-/*h1 {*/
-/*    margin-top: clamp(var(--margin-min), var(--margin-preferred), var(--margin-max));*/
-/*    text-align: center;*/
-/*}*/
-h3 {
-    margin: 0;
-    font-weight: normal;
-}
-
-.flex-column {
-    font-size: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-}
+/* Reusable blocks */
 
 .box {
     padding: 1em;
@@ -38,18 +9,65 @@ h3 {
     border: none;
 }
 
-.loading {
-    flex: 5;
+.box__header {
+    margin: 0;
+    font-weight: normal;
 }
 
-.box-value {
+.box__value {
     font-weight: bold;
     transition: all 0.5s ease-in;
     font-size: 1.4rem;
     color: var(--gradient-end-dark);
 }
 
-.game-description {
+.flex-column {
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Layout blocks */
+
+main {
+    height: 100vh;
+    padding: 1em 1em 0;
+}
+
+.loading {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--light-color);
+}
+
+.game {
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: 2fr 3fr;
+    gap: 1em;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.game__content {
+    width: 100%;
+    display: grid;
+    min-width: 0;
+    align-self: flex-start;
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+    grid-auto-rows: minmax(100px, auto);
+    gap: 1rem;
+    box-sizing: border-box;
+}
+
+/* Component blocks */
+
+.description {
     align-self: center;
     justify-self: center;
 
@@ -68,130 +86,105 @@ h3 {
     }
 }
 
-/*.game {*/
-/*display: grid;*/
-/*min-width: 0;*/
-/*align-self: flex-start;*/
-/*grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));*/
-/*grid-auto-rows: minmax(140px, auto);*/
-/*gap: 1rem;*/
+.current-price {
+    grid-row: 1;
+    grid-column: span 1;
+    @media (max-width: 625px) {
+        grid-column: span 1;
+    }
+}
 
-/*display: grid;*/
-/*min-width: 0;*/
-/*align-self: flex-start;*/
-/*grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));*/
-/*grid-auto-rows: minmax(120px, auto);*/
-/*gap: 1rem;*/
-.game {
-
-    width: 100%;
-    display: grid;
-    min-width: 0;
-    align-self: flex-start;
-    grid-template-columns: repeat(2, minmax(150px, 1fr));
-    grid-auto-rows: minmax(100px, auto);
-    gap: 1rem;
-    box-sizing: border-box;
-
-    .current-price {
+.score {
+    grid-row: 2;
+    grid-column: span 1;
+    text-align: center;
+    @media (max-width: 625px) {
         grid-row: 1;
         grid-column: span 1;
-        @media (max-width: 625px) {
-            /* For wider screens */
-            grid-column: span 1;  /* Take less space when screen is wide */
-        }
     }
+}
 
-    .score {
+.guess-panel {
+    grid-row: 1;
+    grid-column: span 2;
+    justify-content: space-around;
+
+    @media (max-width: 625px) {
         grid-row: 2;
-        grid-column: span 1;
-        text-align: center;
-        @media (max-width: 625px) {
-            /* For wider screens */
-            grid-row: 1;  /* Take less space when screen is wide */
-            grid-column: span 1;  /* Take less space when screen is wide */
-        }
-    }
-
-    .guess-ui {
-        grid-row: 1;
         grid-column: span 2;
-        justify-content: space-around;
-
-        @media (max-width: 625px) {
-            /* For wider screens */
-            grid-row: 2;  /* Take less space when screen is wide */
-            grid-column: span 2;  /* Take less space when screen is wide */
-        }
-
-        .guess-message {
-            font-weight: bold;
-            font-size: 1rem;
-            color: var(--gradient-end-dark);
-        }
-
-        .correct-answer {
-            font-size: 1.4rem;
-            text-shadow: lightgreen 0 0 20px;
-            color: green;
-        }
-
-        .wrong-answer {
-            font-size: 1.4rem;
-            text-shadow: lightcoral 0 0 20px;
-            color: red;
-        }
-
-        .buttons-container {
-            flex-direction: row;
-            justify-content: stretch;
-            width: 100%;
-
-            button {
-                flex: 1 1 0;
-                font-size: 1rem;
-                cursor: pointer;
-                transition: background 0.3s;
-                box-shadow: none;
-                background: var(--gradient-end-dark);
-                color: var(--light-color);
-                font-weight: bold;
-            }
-        }
     }
+}
 
-    .last-guess {
-        grid-row: 2/3;
+.guess-panel__message {
+    font-weight: bold;
+    font-size: 1rem;
+    color: var(--gradient-end-dark);
+}
+
+.guess-panel__message--correct-answer {
+    font-size: 1.4rem;
+    text-shadow: lightgreen 0 0 20px;
+    color: green;
+}
+
+.guess-panel__message--wrong-answer {
+    font-size: 1.4rem;
+    text-shadow: lightcoral 0 0 20px;
+    color: red;
+}
+
+.guess-panel__buttons {
+    font-size: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-direction: row;
+    justify-content: stretch;
+    width: 100%;
+}
+
+.guess-panel__button {
+    flex: 1 1 0;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    box-shadow: none;
+    background: var(--gradient-end-dark);
+    color: var(--light-color);
+    font-weight: bold;
+}
+
+.last-guess {
+    grid-row: 2/3;
+    grid-column: span 2;
+    gap: 1em;
+    color: var(--text-color);
+
+    @media (max-width: 625px) {
+        grid-row: 3;
         grid-column: span 2;
-        gap: 1em;
-        color: var(--text-color);
-
-        @media (max-width: 625px) {
-            /* Adjust breakpoint as needed */
-            grid-row: 3;
-            grid-column: span 2;
-        }
-
-        .last-guess-content {
-            display: flex;
-            flex-direction: row;
-            gap: 1em;
-            align-items: flex-start;
-            justify-content: center;
-            text-align: center;
-
-            .last-guess-label {
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                gap: 1rem;
-
-                .last-guess-value {
-                    color: var(--gradient-end-dark);
-                    font-size: 1rem;
-                    font-weight: bold;
-                }
-            }
-        }
     }
+}
+
+.last-guess__content {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: center;
+}
+
+.last-guess__label {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1rem;
+
+}
+
+.last-guess__value {
+    color: var(--gradient-end-dark);
+    font-size: 1rem;
+    font-weight: bold;
 }

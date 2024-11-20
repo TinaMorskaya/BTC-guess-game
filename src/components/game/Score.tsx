@@ -5,8 +5,8 @@ export const Score = () => {
 
     return (
         <section className='score box flex-column'>
-            <h3>Your score:</h3>
-            <span className='box-value'>
+            <h3 className='box__header'>Your score:</h3>
+            <span className='box__value'>
                 {score ?? 0}
             </span>
         </section>

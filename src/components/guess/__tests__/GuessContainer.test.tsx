@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, Mock, afterEach } from 'vitest';
 import { render, screen, act, within } from '@testing-library/react';
-import { PredictionContainer, GuessContainerProps } from '../PredictionContainer.tsx';
+import { GuessPredictionContainer, GuessContainerProps } from '../GuessPredictionContainer.tsx';
 import { useGuess } from '../../../hooks/useGuess.tsx';
 import { Guess, GuessResult } from '../../../types.ts';
 import { usePlayerContext } from '../../../hooks/usePlayerContext.tsx';
@@ -14,7 +14,7 @@ describe('GuessContainer', () => {
 
     const renderComponent = (props?: Partial<GuessContainerProps>) => {
         return render(
-            <PredictionContainer btcPrice={5} {...props}/>
+            <GuessPredictionContainer btcPrice={5} {...props}/>
         );
     }
 

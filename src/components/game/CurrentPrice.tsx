@@ -5,8 +5,8 @@ export const CurrentPrice = () => {
 
     return (
         <section className='box current-price flex-column' aria-live='polite'>
-            <h3>Current price:</h3>
-            <span className='box-value'>{btcPrice}</span>
+            <h3 className='box__header'>Current price:</h3>
+            <span className='box__value'>{btcPrice}</span>
         </section>
     )
 }

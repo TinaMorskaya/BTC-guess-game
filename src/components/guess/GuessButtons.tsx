@@ -5,11 +5,11 @@ export interface GuessButtonsProps {
 }
 
 export const GuessButtons = ({onGuess}: GuessButtonsProps) =>
-    <div className='buttons-container flex-column'>
-        <button className='box' onClick={() => onGuess(Guess.Up)}>
+    <div className='guess-panel__buttons'>
+        <button className='box guess-panel__button' onClick={() => onGuess(Guess.Up)}>
             Up
         </button>
-        <button className='box' onClick={() => onGuess(Guess.Down)}>
+        <button className='box guess-panel__button' onClick={() => onGuess(Guess.Down)}>
             Down
         </button>
     </div>
