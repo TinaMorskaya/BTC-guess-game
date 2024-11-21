@@ -33,13 +33,12 @@ describe('GameContainer', () => {
         expect(screen.getByText('Status: loading')).toBeVisible();
     });
 
-    it('should render GameContainer', () => {
+    it('should render game without status, when btcPrice is provided', () => {
         mockUseBTCPriceContext.mockReturnValue({btcPrice: 5, btcWebSocketStatus: 'ready'});
         renderComponent();
 
         expect(mockUseBTCPriceContext).toHaveBeenCalled();
-        expect(screen.getByLabelText('Game description')).toBeVisible();
-        expect(screen.getByLabelText('Game')).toBeVisible();
+        expect(screen.getByRole('heading', {name: 'BitPredict: 60-Second Bitcoin Price Challenge'})).toBeInTheDocument();
         expect(screen.queryByText('ready')).not.toBeInTheDocument();
     });
 });

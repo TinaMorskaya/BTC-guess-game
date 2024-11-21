@@ -4,7 +4,7 @@ import { Score } from './Score.tsx';
 
 export const Game = () => (
     <div className='game'>
-        <section aria-label='Game description' className='description box'>
+        <section className='description box'>
             <h1>BitPredict: 60-Second Bitcoin Price Challenge</h1>
             <p>Predict Bitcoin's price movement in this quick-fire guessing game.
                 Choose 'Up' or 'Down' for the BTC/USD price in the next minute.
@@ -12,7 +12,7 @@ export const Game = () => (
                 Watch the live price, time your predictions, and see how high you can score!
             </p>
         </section>
-        <section aria-label='Game' className='game__content'>
+        <section className='game__content'>
             <CurrentPrice/>
             <Score/>
             <GuessPredictionContainer/>
