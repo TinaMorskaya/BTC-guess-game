@@ -61,14 +61,13 @@ describe('useGuess', () => {
         expect(onResult).not.toHaveBeenCalled();
 
         act(() => {
-            vi.advanceTimersByTime(1000);
+            vi.advanceTimersByTime(5000);
         });
 
         expect(onResult).not.toHaveBeenCalled();
 
-        act(() => {
-            rerender({btcPrice: 200});
-        });
+
+        rerender({btcPrice: 200});
 
 
         const {currentGuess, currentGuessPrice} = result.current;
@@ -90,12 +89,10 @@ describe('useGuess', () => {
         expect(onResult).not.toHaveBeenCalled();
 
         act(() => {
-            vi.advanceTimersByTime(999);
+            vi.advanceTimersByTime(4999);
         });
 
-        act(() => {
-            rerender({btcPrice: 200});
-        });
+        rerender({btcPrice: 200});
 
         expect(onResult).not.toHaveBeenCalled();
         expect(result.current.currentGuess).toBe(Guess.Up);
@@ -115,14 +112,12 @@ describe('useGuess', () => {
         expect(onResult).not.toHaveBeenCalled();
 
         act(() => {
-            vi.advanceTimersByTime(1000);
+            vi.advanceTimersByTime(5000);
         });
 
         expect(onResult).not.toHaveBeenCalled();
 
-        act(() => {
-            rerender({btcPrice: 101});
-        });
+        rerender({btcPrice: 101});
 
         const {currentGuess, currentGuessPrice} = result.current;
         expect(currentGuess).toBeNull();
@@ -148,14 +143,12 @@ describe('useGuess', () => {
         expect(onResult).not.toHaveBeenCalled();
 
         act(() => {
-            vi.advanceTimersByTime(1000);
+            vi.advanceTimersByTime(5000);
         });
 
         expect(onResult).not.toHaveBeenCalled();
 
-        act(() => {
-            rerender({btcPrice: 99});
-        });
+        rerender({btcPrice: 99});
 
         const {currentGuess, currentGuessPrice} = result.current;
         expect(currentGuess).toBeNull();
@@ -176,14 +169,12 @@ describe('useGuess', () => {
         expect(onResult).not.toHaveBeenCalled();
 
         act(() => {
-            vi.advanceTimersByTime(1000);
+            vi.advanceTimersByTime(5000);
         });
 
         expect(onResult).not.toHaveBeenCalled();
 
-        act(() => {
-            rerender({btcPrice: 99});
-        });
+        rerender({btcPrice: 99});
 
         const {currentGuess, currentGuessPrice} = result.current;
         expect(currentGuess).toBeNull();
