@@ -1,7 +1,7 @@
 import './App.css'
-import { PlayerProvider } from './context/GameProvider.tsx';
+import { PlayerProvider } from './contexts/PlayerContext.tsx';
 import { GameContainer } from './components/game/GameContainer.tsx';
-import { BTCPriceProvider } from './context/BTCPriceProvider.tsx';
+import { BTCPriceProvider } from './contexts/BTCPriceContext.tsx';
 
 function App() {
     return (

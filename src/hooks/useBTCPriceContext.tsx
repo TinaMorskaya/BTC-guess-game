@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { BTCPriceContext } from '../context/BTCPriceProvider.tsx';
+import { BTCPriceContext } from '../contexts/BTCPriceContext';
 
 export const useBTCPriceContext = () => {
     const context = useContext(BTCPriceContext);

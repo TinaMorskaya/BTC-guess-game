@@ -1,4 +1,4 @@
-import { PlayerProvider } from '../../context/GameProvider.tsx';
+import { PlayerProvider } from '../../contexts/PlayerProvider.tsx';
 import { usePlayerContext } from '../usePlayerContext.tsx';
 import { renderHook } from '@testing-library/react';
 import { ReactNode } from 'react';

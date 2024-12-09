@@ -1,14 +1,14 @@
 import React, { createContext, useCallback, useMemo, useState } from 'react';
 import { Player } from '../types.ts';
 
-export interface GameContextType {
+export interface PlayerContextType {
     playerId: string | null;
     score: number;
     increaseScore: () => void;
     decreaseScore: () => void;
 }
 
-export const PlayerContext = createContext<GameContextType | undefined>(undefined);
+export const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 
 export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [ playerData, setPlayerData ] = useState<Player>(() => {
