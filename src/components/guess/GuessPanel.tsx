@@ -19,7 +19,7 @@ export const GuessPanel = (
         {!currentGuessPrice && !showResult &&
             <GuessButtons onGuess={handleGuess}/>
         }
-        {currentGuessPrice &&
+        {currentGuessPrice && !showResult &&
             <section className='guess-panel__message' role='alert'>
                 Waiting for result...
             </section>
