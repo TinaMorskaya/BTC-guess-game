@@ -3,11 +3,13 @@ module.exports = {
     env: {browser: true, es2020: true},
     extends: [
         'eslint:recommended',
-        'plugin:@typescript-eslint/recommended',
+        'plugin:@typescript-eslint/recommended-type-checked',
         'plugin:react-hooks/recommended',
         'plugin:react/recommended',
         'plugin:testing-library/react',
         'plugin:jest-dom/recommended',
+        'plugin:react/jsx-runtime',
+        'plugin:@typescript-eslint/stylistic-type-checked',
     ],
     ignorePatterns: [ 'dist', '.eslintrc.cjs' ],
     parser: '@typescript-eslint/parser',
@@ -31,5 +33,11 @@ module.exports = {
         react: {
             version: 'detect'
         }
+    },
+    parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        project: [ './tsconfig.json', './tsconfig.node.json', './tsconfig.app.json' ],
+        tsconfigRootDir: __dirname,
     },
 }
