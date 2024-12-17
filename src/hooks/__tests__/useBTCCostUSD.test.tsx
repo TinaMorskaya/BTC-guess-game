@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, Mock, vi } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import { useBTCCostUSD } from '../useBTCCostUSD.tsx';
-import { BTCData } from '../../types.ts';
-import { createBTCWebSocketService } from '../../api/createBTCWebSocketService.ts';
+import { BTCData } from '../../types/types.ts';
+import { createBTCWebSocketService, CreateBTCWebSocketServiceProps } from '../../api/createBTCWebSocketService.ts';
 
 vi.mock('../../api/createBTCWebSocketService.ts');
 
@@ -13,13 +13,28 @@ describe('useBTCCostUSD', () => {
     const mockConnect = vi.fn();
     const mockDisconnect = vi.fn();
     const renderCustomHook = () => renderHook(() => useBTCCostUSD());
+    const data: BTCData = {
+        p: '5',
+        T: Date.parse('2023-01-01T00:00:00Z'),
+        e: 'e',
+        E: 1,
+        s: 's',
+        q: 'q',
+        t: 1,
+        m: true,
+        M: true,
+    };
 
     beforeAll(() => {
         vi.useFakeTimers();
     });
 
     beforeEach(() => {
-        mockCreateBTCWebSocketService.mockImplementation(({dataListener, statusListener}) => {
+        mockCreateBTCWebSocketService.mockImplementation((
+            {
+                dataListener,
+                statusListener
+            }: CreateBTCWebSocketServiceProps) => {
             mockDataListener = dataListener;
             mockStatusListener = statusListener;
             return {
@@ -51,7 +66,6 @@ describe('useBTCCostUSD', () => {
         'update status when statusListener are called during the wait time of 3 sec', () => {
         const {result} = renderCustomHook();
 
-        const data: BTCData = {p: '5', T: Date.parse('2023-01-01T00:00:00Z'), ...vi.fn()()};
         act(() => {
             mockDataListener(data);
             mockStatusListener('connected');
@@ -98,18 +112,17 @@ describe('useBTCCostUSD', () => {
     it('should NOT update price and date when dataListener is called with invalid data', () => {
         const {result} = renderCustomHook();
 
-        const validData: BTCData = {p: '5', T: Date.parse('2023-01-01T00:00:00Z'), ...vi.fn()()};
         act(() => {
-            mockDataListener(validData);
+            mockDataListener(data);
         });
 
         const {price: validPrice, date: validDate} = result.current;
         expect(validPrice).toBe(5);
         expect(validDate).toEqual(new Date('2023-01-01T00:00:00Z'));
 
-        const data: BTCData = {p: 'invalid', T: Date.now(), ...vi.fn()()};
+        const invalidData: BTCData = {...data, p: 'invalid', T: Date.parse('2024-02-02T00:00:00Z')}
         act(() => {
-            mockDataListener(data);
+            mockDataListener(invalidData);
         });
 
         const {price, date} = result.current;

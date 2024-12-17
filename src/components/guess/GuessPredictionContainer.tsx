@@ -1,6 +1,6 @@
 import { useGuess } from '../../hooks/useGuess.tsx';
 import { useRef, useState } from 'react';
-import { GuessResult } from '../../types.ts';
+import { GuessResult } from '../../types/types.ts';
 import { GuessPanel } from './GuessPanel.tsx';
 import { usePlayerContext } from '../../hooks/usePlayerContext.tsx';
 import { useBTCPriceContext } from '../../hooks/useBTCPriceContext.tsx';

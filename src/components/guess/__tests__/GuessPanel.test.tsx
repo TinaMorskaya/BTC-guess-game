@@ -2,7 +2,7 @@ import { describe, expect } from 'vitest';
 import { userEvent } from '@testing-library/user-event';
 import { GuessPanel, GuessPanelProps } from '../GuessPanel.tsx';
 import { render, screen } from '@testing-library/react';
-import { Guess } from '../../../types.ts';
+import { Guess } from '../../../types/types.ts';
 
 const user = userEvent.setup();
 

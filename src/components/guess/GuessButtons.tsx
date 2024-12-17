@@ -1,4 +1,4 @@
-import { Guess } from '../../types.ts';
+import { Guess } from '../../types/types.ts';
 
 export interface GuessButtonsProps {
     onGuess: (guess: Guess) => void;

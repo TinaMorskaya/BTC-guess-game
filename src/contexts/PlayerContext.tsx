@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useMemo, useState } from 'react';
-import { Player } from '../types.ts';
+import { Player } from '../types/types.ts';
 
 export interface PlayerContextType {
     playerId: string | null;
@@ -13,7 +13,7 @@ export const PlayerContext = createContext<PlayerContextType | undefined>(undefi
 export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [ playerData, setPlayerData ] = useState<Player>(() => {
         const storedData = localStorage.getItem('playerData');
-        return storedData ? JSON.parse(storedData) : {
+        return storedData ? JSON.parse(storedData) as Player : {
             playerId: crypto.randomUUID(),
             score: 0,
         };

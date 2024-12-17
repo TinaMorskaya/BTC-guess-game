@@ -1,6 +1,6 @@
 import { afterEach, describe, Mock, vi } from 'vitest';
 import { Score } from '../Score.tsx';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { usePlayerContext } from '../../../hooks/usePlayerContext.tsx';
 
 vi.mock('../../../hooks/usePlayerContext.tsx');
@@ -23,8 +23,8 @@ describe('Score', () => {
     }
 
     it('should render default score equal to 0', () => {
-        const {getByText} = renderComponent();
-        expect(getByText('Your score:')).toBeVisible();
-        expect(getByText('1')).toBeVisible();
+        renderComponent();
+        expect(screen.getByText('Your score:')).toBeVisible();
+        expect(screen.getByText('1')).toBeVisible();
     });
 });

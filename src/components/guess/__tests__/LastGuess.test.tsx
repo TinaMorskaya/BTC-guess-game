@@ -1,7 +1,7 @@
 import { describe, expect } from 'vitest';
 import { LastGuess, LastGuessProps } from '../LastGuess.tsx';
 import { render, screen } from '@testing-library/react';
-import { Guess } from '../../../types.ts';
+import { Guess } from '../../../types/types.ts';
 
 describe('LastGuess', () => {
     const result = {guess: Guess.Up, resolvedPrice: 6, guessPrice: 5, isWinner: true};

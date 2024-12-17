@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, Mock, afterEach } from 'vitest';
 import { render, screen, act, within } from '@testing-library/react';
 import { GuessPredictionContainer } from '../GuessPredictionContainer.tsx';
-import { useGuess } from '../../../hooks/useGuess.tsx';
-import { Guess, GuessResult } from '../../../types.ts';
+import { useGuess, UseGuessProps } from '../../../hooks/useGuess.tsx';
+import { Guess, GuessResult } from '../../../types/types.ts';
 import { usePlayerContext } from '../../../hooks/usePlayerContext.tsx';
 import { useBTCPriceContext } from '../../../hooks/useBTCPriceContext.tsx';
 
@@ -57,7 +57,8 @@ describe('GuessPredictionContainer', () => {
 
         const result: GuessResult = {guessPrice: 5, resolvedPrice: 6, guess: Guess.Up, isWinner: true};
         act(() => {
-            mockUseGuess.mock.calls[0][0].onResult(result);
+            const props = mockUseGuess.mock.calls[0][0] as UseGuessProps;
+            props.onResult(result);
         });
 
         expect(increaseScore).toHaveBeenCalledTimes(1);
@@ -94,7 +95,8 @@ describe('GuessPredictionContainer', () => {
 
         const result: GuessResult = {guessPrice: 5, resolvedPrice: 6, guess: Guess.Down, isWinner: false};
         act(() => {
-            mockUseGuess.mock.calls[0][0].onResult(result);
+            const props = mockUseGuess.mock.calls[0][0] as UseGuessProps;
+            props.onResult(result);
         });
 
         expect(decreaseScore).toHaveBeenCalledTimes(1);
@@ -129,7 +131,8 @@ describe('GuessPredictionContainer', () => {
 
         const result: GuessResult = {guessPrice: 5, resolvedPrice: 6, guess: Guess.Up, isWinner: true};
         act(() => {
-            mockUseGuess.mock.calls[0][0].onResult(result);
+            const props = mockUseGuess.mock.calls[0][0] as UseGuessProps;
+            props.onResult(result);
         });
 
         act(() => {
@@ -140,7 +143,8 @@ describe('GuessPredictionContainer', () => {
 
         const nextResult: GuessResult = {guessPrice: 2, resolvedPrice: 1, guess: Guess.Up, isWinner: false};
         act(() => {
-            mockUseGuess.mock.calls[0][0].onResult(nextResult);
+            const props = mockUseGuess.mock.calls[0][0] as UseGuessProps;
+            props.onResult(nextResult);
         });
 
         // Show the new result

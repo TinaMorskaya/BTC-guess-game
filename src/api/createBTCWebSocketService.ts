@@ -1,4 +1,5 @@
-import { BTCData } from '../types.ts';
+import { BTCData } from '../types/types.ts';
+import { isBTCData } from '../utils/type-guards/isBTCData.ts';
 
 export interface BTCWebSocketService {
     connect: () => void;
@@ -35,10 +36,15 @@ export const createBTCWebSocketService = (
             reconnectAttempts = 0;
         }
 
-        ws.onmessage = (event) => {
-            const data: BTCData = JSON.parse(event.data);
-            dataListener(data);
-            statusListener('Successfully received data');
+        ws.onmessage = (event: MessageEvent<string>) => {
+            const data: unknown = JSON.parse(event.data);
+            if (isBTCData(data)) {
+                dataListener(data);
+                statusListener('Successfully received data');
+            } else {
+                statusListener('Received malformed data');
+                console.error('Invalid data format received:', data);
+            }
         };
 
         ws.onclose = () => {

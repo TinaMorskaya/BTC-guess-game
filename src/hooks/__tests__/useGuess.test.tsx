@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { useGuess, UseGuessProps } from '../useGuess.tsx';
 import { act, renderHook } from '@testing-library/react';
-import { Guess } from '../../types.ts';
+import { Guess } from '../../types/types.ts';
 
 describe('useGuess', () => {
     const onResult = vi.fn();
@@ -61,7 +61,7 @@ describe('useGuess', () => {
         expect(onResult).not.toHaveBeenCalled();
 
         act(() => {
-            vi.advanceTimersByTime(5000);
+            vi.advanceTimersByTime(60000);
         });
 
         expect(onResult).not.toHaveBeenCalled();
@@ -112,7 +112,7 @@ describe('useGuess', () => {
         expect(onResult).not.toHaveBeenCalled();
 
         act(() => {
-            vi.advanceTimersByTime(5000);
+            vi.advanceTimersByTime(60000);
         });
 
         expect(onResult).not.toHaveBeenCalled();
@@ -143,7 +143,7 @@ describe('useGuess', () => {
         expect(onResult).not.toHaveBeenCalled();
 
         act(() => {
-            vi.advanceTimersByTime(5000);
+            vi.advanceTimersByTime(60000);
         });
 
         expect(onResult).not.toHaveBeenCalled();
@@ -169,7 +169,7 @@ describe('useGuess', () => {
         expect(onResult).not.toHaveBeenCalled();
 
         act(() => {
-            vi.advanceTimersByTime(5000);
+            vi.advanceTimersByTime(60000);
         });
 
         expect(onResult).not.toHaveBeenCalled();
@@ -192,13 +192,14 @@ describe('useGuess', () => {
             handleGuess(Guess.Up);
         });
 
-        const firstTimeoutId = setTimeoutSpy.mock.results[0].value;
+        console.log(setTimeoutSpy.mock.results[0].value);
+        const timeoutReturn = setTimeoutSpy.mock.results[0];
 
         act(() => {
             handleGuess(Guess.Down);
         });
 
-        expect(clearTimeoutSpy).toHaveBeenCalledWith(firstTimeoutId);
+        expect(clearTimeoutSpy).toHaveBeenCalledWith(timeoutReturn.value);
 
         clearTimeoutSpy.mockRestore();
         setTimeoutSpy.mockRestore();

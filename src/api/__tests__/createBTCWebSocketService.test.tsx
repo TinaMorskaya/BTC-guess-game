@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, vi } from 'vitest';
-import { WebSocketMock } from '../mocks/webSocketMock.ts';
-import { createBTCWebSocketService } from './createBTCWebSocketService.ts';
+import { WebSocketMock } from '../../mocks/webSocketMock.ts';
+import { createBTCWebSocketService } from '../createBTCWebSocketService.ts';
 
 describe('createBTCWebSocketService', () => {
     const dataListener = vi.fn();
@@ -29,8 +29,29 @@ describe('createBTCWebSocketService', () => {
         ws.toggleOnOpen();
         expect(statusListener).toHaveBeenCalledWith('WebSocket connected');
 
-        ws.toggleOnMessage({data: JSON.stringify({p: '5', T: 1726769633375}), ...vi.fn()()});
-        expect(dataListener).toHaveBeenCalledWith({p: '5', T: 1726769633375});
+        const data = {
+            e: 'e',
+            E: 1,
+            s: 's',
+            p: 'p',
+            q: 'q',
+            t: 1,
+            m: true,
+            M: true,
+            T: 1
+        };
+        ws.toggleOnMessage(new MessageEvent('message', {data: JSON.stringify(data)}));
+        expect(dataListener).toHaveBeenCalledWith({
+            e: 'e',
+            E: 1,
+            s: 's',
+            p: 'p',
+            q: 'q',
+            t: 1,
+            m: true,
+            M: true,
+            T: 1
+        });
         expect(statusListener).toHaveBeenCalledWith('Successfully received data');
     });
 
