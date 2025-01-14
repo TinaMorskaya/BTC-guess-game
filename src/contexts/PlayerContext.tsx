@@ -8,16 +8,18 @@ export interface PlayerContextType {
     decreaseScore: () => void;
 }
 
+const getPlayerData = () => {
+    const storedData = localStorage.getItem('playerData');
+    return storedData ? JSON.parse(storedData) as Player : {
+        playerId: crypto.randomUUID(),
+        score: 0,
+    };
+};
+
 export const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 
 export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
-    const [ playerData, setPlayerData ] = useState<Player>(() => {
-        const storedData = localStorage.getItem('playerData');
-        return storedData ? JSON.parse(storedData) as Player : {
-            playerId: crypto.randomUUID(),
-            score: 0,
-        };
-    });
+    const [ playerData, setPlayerData ] = useState<Player>(getPlayerData);
 
     const changeScore = useCallback((updatedScore: Player['score']) => {
         const updatedData = {...playerData, score: updatedScore};

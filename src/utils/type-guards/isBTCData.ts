@@ -1,19 +1,18 @@
 import { BTCData } from '../../types/types.ts';
+import { isObjectOfType, TypeChecks } from './isObjectOfType.ts';
 
-export const isBTCData = (data: unknown): data is BTCData => {
-    const record = data as Record<string, unknown>;
-    if (!data || typeof data !== 'object') return false;
+const typeChecks = {
+    e: 'string',
+    E: 'number',
+    s: 'string',
+    p: 'string',
+    q: 'string',
+    t: 'number',
+    m: 'boolean',
+    M: 'boolean',
+    T: 'number'
+} satisfies TypeChecks<BTCData>;
 
-    return (
-        typeof record.e === 'string' &&
-        typeof record.E === 'number' &&
-        typeof record.s === 'string' &&
-        typeof record.p === 'string' &&
-        typeof record.q === 'string' &&
-        typeof record.t === 'number' &&
-        typeof record.m === 'boolean' &&
-        typeof record.M === 'boolean' &&
-        typeof record.T === 'number'
-    );
-}
 
+export const isBTCData = (data: unknown): data is BTCData =>
+    isObjectOfType(data, typeChecks);

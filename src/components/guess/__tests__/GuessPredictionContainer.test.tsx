@@ -16,6 +16,10 @@ describe('GuessPredictionContainer', () => {
     const mockUseBTCPriceContext = useBTCPriceContext as Mock;
     const increaseScore = vi.fn();
     const decreaseScore = vi.fn();
+    const handlers: UseGuessProps = {
+        onResult: vi.fn(),
+        btcPrice: 0
+    };
 
     const renderComponent = () => {
         return render(
@@ -24,10 +28,14 @@ describe('GuessPredictionContainer', () => {
     }
 
     beforeEach(() => {
-        mockUseGuess.mockReturnValue({
-            handleGuess: vi.fn(),
-            currentGuessPrice: null,
-            currentGuess: null
+        mockUseGuess.mockImplementation((props: UseGuessProps) => {
+            handlers.onResult = props.onResult;
+            handlers.btcPrice = props.btcPrice;
+            return {
+                handleGuess: vi.fn(),
+                currentGuessPrice: null,
+                currentGuess: null
+            };
         });
         mockUsePlayerContext.mockReturnValue({increaseScore, decreaseScore});
         mockUseBTCPriceContext.mockReturnValue({btcPrice: null});
@@ -57,8 +65,7 @@ describe('GuessPredictionContainer', () => {
 
         const result: GuessResult = {guessPrice: 5, resolvedPrice: 6, guess: Guess.Up, isWinner: true};
         act(() => {
-            const props = mockUseGuess.mock.calls[0][0] as UseGuessProps;
-            props.onResult(result);
+            handlers.onResult(result);
         });
 
         expect(increaseScore).toHaveBeenCalledTimes(1);
@@ -95,8 +102,7 @@ describe('GuessPredictionContainer', () => {
 
         const result: GuessResult = {guessPrice: 5, resolvedPrice: 6, guess: Guess.Down, isWinner: false};
         act(() => {
-            const props = mockUseGuess.mock.calls[0][0] as UseGuessProps;
-            props.onResult(result);
+            handlers.onResult(result);
         });
 
         expect(decreaseScore).toHaveBeenCalledTimes(1);
@@ -131,8 +137,7 @@ describe('GuessPredictionContainer', () => {
 
         const result: GuessResult = {guessPrice: 5, resolvedPrice: 6, guess: Guess.Up, isWinner: true};
         act(() => {
-            const props = mockUseGuess.mock.calls[0][0] as UseGuessProps;
-            props.onResult(result);
+            handlers.onResult(result);
         });
 
         act(() => {
@@ -143,8 +148,7 @@ describe('GuessPredictionContainer', () => {
 
         const nextResult: GuessResult = {guessPrice: 2, resolvedPrice: 1, guess: Guess.Up, isWinner: false};
         act(() => {
-            const props = mockUseGuess.mock.calls[0][0] as UseGuessProps;
-            props.onResult(nextResult);
+            handlers.onResult(nextResult);
         });
 
         // Show the new result
