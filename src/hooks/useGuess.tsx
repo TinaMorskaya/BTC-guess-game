@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Guess, GuessResult } from '../types.ts';
+import { Guess, GuessResult } from '../types/types.ts';
 
-export const TIMEOUT_WAITING_FOR_PRICE_CHANGE = 5000;
+export const TIMEOUT_WAITING_FOR_PRICE_CHANGE = 60000;
 
 export interface GuessState {
     currentGuess: Guess | null;

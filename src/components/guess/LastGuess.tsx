@@ -1,4 +1,4 @@
-import { Guess, GuessResult } from '../../types.ts';
+import { Guess, GuessResult } from '../../types/types.ts';
 
 export interface LastGuessProps {
     currentGuess: Guess | null;

@@ -1,6 +1,6 @@
 import { GuessButtons, GuessButtonsProps } from '../GuessButtons.tsx';
 import { render, screen } from '@testing-library/react';
-import { Guess } from '../../../types.ts';
+import { Guess } from '../../../types/types.ts';
 
 describe('GuessButtons', () => {
     const onGuess = vi.fn();

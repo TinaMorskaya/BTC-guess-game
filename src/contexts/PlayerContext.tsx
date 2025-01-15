@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useMemo, useState } from 'react';
-import { Player } from '../types.ts';
+import { Player } from '../types/types.ts';
+import { isPlayer } from '../utils/type-guards/isPlayer.ts';
 
 export interface PlayerContextType {
     playerId: string | null;
@@ -8,16 +9,26 @@ export interface PlayerContextType {
     decreaseScore: () => void;
 }
 
+const getPlayerData = () => {
+    const storedData = localStorage.getItem('playerData');
+
+    if (storedData) {
+        const parsedData: unknown = JSON.parse(storedData);
+        if (isPlayer(parsedData)) {
+            return parsedData;
+        }
+    }
+
+    return {
+        playerId: crypto.randomUUID(),
+        score: 0,
+    };
+};
+
 export const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 
 export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
-    const [ playerData, setPlayerData ] = useState<Player>(() => {
-        const storedData = localStorage.getItem('playerData');
-        return storedData ? JSON.parse(storedData) : {
-            playerId: crypto.randomUUID(),
-            score: 0,
-        };
-    });
+    const [ playerData, setPlayerData ] = useState<Player>(getPlayerData);
 
     const changeScore = useCallback((updatedScore: Player['score']) => {
         const updatedData = {...playerData, score: updatedScore};

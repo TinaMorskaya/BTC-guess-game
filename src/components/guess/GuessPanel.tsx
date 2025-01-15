@@ -1,5 +1,5 @@
 import { GuessButtons } from './GuessButtons.tsx';
-import { Guess } from '../../types.ts';
+import { Guess } from '../../types/types.ts';
 
 export interface GuessPanelProps {
     currentGuessPrice: number | null;

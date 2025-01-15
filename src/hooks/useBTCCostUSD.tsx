@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { createBTCWebSocketService } from '../api/createBTCWebSocketService.ts';
-import { BTCData } from '../types.ts';
-import { useThrottleState } from '../helpers/throttle/useThrottleState.tsx';
+import { BTCData } from '../types/types.ts';
+import { useThrottleState } from '../utils/throttle/useThrottleState.tsx';
 
 export const WAIT_TIME = 3000;
 

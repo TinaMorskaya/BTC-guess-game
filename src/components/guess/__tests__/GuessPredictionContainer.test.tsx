@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, Mock, afterEach } from 'vitest';
 import { render, screen, act, within } from '@testing-library/react';
 import { GuessPredictionContainer } from '../GuessPredictionContainer.tsx';
-import { useGuess } from '../../../hooks/useGuess.tsx';
-import { Guess, GuessResult } from '../../../types.ts';
+import { useGuess, UseGuessProps } from '../../../hooks/useGuess.tsx';
+import { Guess, GuessResult } from '../../../types/types.ts';
 import { usePlayerContext } from '../../../hooks/usePlayerContext.tsx';
 import { useBTCPriceContext } from '../../../hooks/useBTCPriceContext.tsx';
 
@@ -16,6 +16,10 @@ describe('GuessPredictionContainer', () => {
     const mockUseBTCPriceContext = useBTCPriceContext as Mock;
     const increaseScore = vi.fn();
     const decreaseScore = vi.fn();
+    const handlers: UseGuessProps = {
+        onResult: vi.fn(),
+        btcPrice: 0
+    };
 
     const renderComponent = () => {
         return render(
@@ -24,10 +28,14 @@ describe('GuessPredictionContainer', () => {
     }
 
     beforeEach(() => {
-        mockUseGuess.mockReturnValue({
-            handleGuess: vi.fn(),
-            currentGuessPrice: null,
-            currentGuess: null
+        mockUseGuess.mockImplementation((props: UseGuessProps) => {
+            handlers.onResult = props.onResult;
+            handlers.btcPrice = props.btcPrice;
+            return {
+                handleGuess: vi.fn(),
+                currentGuessPrice: null,
+                currentGuess: null
+            };
         });
         mockUsePlayerContext.mockReturnValue({increaseScore, decreaseScore});
         mockUseBTCPriceContext.mockReturnValue({btcPrice: null});
@@ -57,7 +65,7 @@ describe('GuessPredictionContainer', () => {
 
         const result: GuessResult = {guessPrice: 5, resolvedPrice: 6, guess: Guess.Up, isWinner: true};
         act(() => {
-            mockUseGuess.mock.calls[0][0].onResult(result);
+            handlers.onResult(result);
         });
 
         expect(increaseScore).toHaveBeenCalledTimes(1);
@@ -94,7 +102,7 @@ describe('GuessPredictionContainer', () => {
 
         const result: GuessResult = {guessPrice: 5, resolvedPrice: 6, guess: Guess.Down, isWinner: false};
         act(() => {
-            mockUseGuess.mock.calls[0][0].onResult(result);
+            handlers.onResult(result);
         });
 
         expect(decreaseScore).toHaveBeenCalledTimes(1);
@@ -129,7 +137,7 @@ describe('GuessPredictionContainer', () => {
 
         const result: GuessResult = {guessPrice: 5, resolvedPrice: 6, guess: Guess.Up, isWinner: true};
         act(() => {
-            mockUseGuess.mock.calls[0][0].onResult(result);
+            handlers.onResult(result);
         });
 
         act(() => {
@@ -140,7 +148,7 @@ describe('GuessPredictionContainer', () => {
 
         const nextResult: GuessResult = {guessPrice: 2, resolvedPrice: 1, guess: Guess.Up, isWinner: false};
         act(() => {
-            mockUseGuess.mock.calls[0][0].onResult(nextResult);
+            handlers.onResult(nextResult);
         });
 
         // Show the new result
