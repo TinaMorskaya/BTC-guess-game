@@ -21,7 +21,7 @@ export const createBTCWebSocketService = (
 
     let ws: WebSocket | null = null;
     let reconnectAttempts = 0;
-    let reconnectTimeout: number | null = null;
+    let reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
 
     const connect = () => {
         if (ws && (ws.readyState !== WebSocket.CLOSED)) {

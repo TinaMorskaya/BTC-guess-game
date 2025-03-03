@@ -3,10 +3,6 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 import * as Sentry from '@sentry/react';
-// import { Amplify } from 'aws-amplify';
-// import awsconfig from './aws-exports';
-
-// Amplify.configure(awsconfig);
 
 Sentry.init({
     dsn: import.meta.env.VITE_SENTRY_DSN,
