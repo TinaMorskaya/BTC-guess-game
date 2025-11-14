@@ -13,6 +13,15 @@ accuracy.
 - Correct predictions earn 1 point, incorrect predictions lose 1 point
 - New predictions can only be made after the previous one is resolved
 
+## Game Flow
+
+1. The player sees the current BTC/USD price and their score
+2. Player makes a prediction (up or down)
+3. The prediction is locked for 60 seconds
+4. After 60 seconds, the price is compared to the initial price
+5. Score is updated based on prediction accuracy
+6. Player can make a new prediction
+
 ## Features
 
 - Real-time Bitcoin price tracking
@@ -83,12 +92,3 @@ npm run build
 ```
 
 The build will be available in the `dist` directory.
-
-## Game Flow
-
-1. The player sees the current BTC/USD price and their score
-2. Player makes a prediction (up or down)
-3. The prediction is locked for 60 seconds
-4. After 60 seconds, the price is compared to the initial price
-5. Score is updated based on prediction accuracy
-6. Player can make a new prediction
